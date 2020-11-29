@@ -1,4 +1,4 @@
-import indexRouter from "./routes";
+import AppConfig from "./app_config";
 
 const createError = require('http-errors');
 const express = require('express');
@@ -20,7 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+// Routes registration
+AppConfig.initDependencies(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
