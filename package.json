@@ -1,6 +1,6 @@
 {
-  "name": "nexos-segment-spanner-express",
-  "version": "0.1.0",
+  "name": "express-ts-boilerplate",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node --inspect=5858 -r ts-node/register ./bin/runtime.ts"
