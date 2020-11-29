@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+*.jade
+views/
+public/stylesheets/
+rootkey.csv
+.idea/
+dist/
+
+envs/
+
+keys/
