@@ -2,6 +2,7 @@ import {Router} from "express";
 import AppConfig from "../../app_config";
 import IndexBiz from "./index_biz";
 import ServerResponse from "../../responses/server_response";
+import ValidatorUtil from "../../utils/validator_util";
 const indexRouter: Router = Router();
 
 /* GET home page. */
@@ -11,8 +12,12 @@ indexRouter.get('/', (req, res, next) => {
 
 indexRouter.post('/addTest', (req, res, next) => {
   const {a ,b} = req.body;
+  const validator = {
+    "a": "number",
+    "b": "number"
+  };
 
-  if (a == undefined || b == undefined || typeof a != "number" || typeof b != "number") {
+  if (!ValidatorUtil.isValidPayload(req.body, validator)) {
     res.status(500).json(
         ServerResponse.ValidationError(),
     );
