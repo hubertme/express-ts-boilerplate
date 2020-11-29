@@ -3,14 +3,19 @@ import AppConfig from "../../app_config";
 import IndexBiz from "./index_biz";
 import ServerResponse from "../../responses/server_response";
 import ValidatorUtil from "../../utils/validator_util";
+import {allowOptions} from "../../middlewares/allow_options";
+import {logRequest} from "../../middlewares/request_logging";
+
 const indexRouter: Router = Router();
+indexRouter.use(allowOptions);
+indexRouter.use(logRequest);
 
 /* GET home page. */
 indexRouter.get('/', (req, res, next) => {
   res.render('index', { title: `Express - ${AppConfig.IS_PRODUCTION ? 'Production' : 'Development'}` });
 });
 
-indexRouter.post('/addTest', (req, res, next) => {
+indexRouter.post('/test/add', (req, res, next) => {
   const {a ,b} = req.body;
   const validator = {
     "a": "number",
