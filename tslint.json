@@ -11,7 +11,9 @@
     "no-console": false,
     "no-trailing-whitespace": false,
     "triple-equals": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "variable-name": false,
+    "no-string-literal": false
   },
   "rulesDirectory": []
 }
