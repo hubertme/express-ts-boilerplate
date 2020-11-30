@@ -8,7 +8,10 @@
   },
   "rules": {
     "trailing-comma": [ false ],
-    "no-console": false
+    "no-console": false,
+    "no-trailing-whitespace": false,
+    "triple-equals": false,
+    "max-classes-per-file": false
   },
   "rulesDirectory": []
 }
