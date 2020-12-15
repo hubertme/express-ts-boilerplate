@@ -13,7 +13,8 @@
     "triple-equals": false,
     "max-classes-per-file": false,
     "variable-name": false,
-    "no-string-literal": false
+    "no-string-literal": false,
+    "prefer-for-of": false
   },
   "rulesDirectory": []
 }

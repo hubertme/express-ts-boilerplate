@@ -7,6 +7,10 @@ export default class ValidatorUtil {
     static isValidPayload(body: {[key: string]: any}, validator: {[key: string]: string}): boolean {
         const acceptedTypes = ["number", "string", "boolean", "object"];
 
+        if (Object.keys(body).length != Object.keys(validator).length) {
+            return false;
+        }
+
         for (const key of Object.keys(validator)) {
             const val = body[key];
             const actualType = validator[key];
@@ -15,6 +19,14 @@ export default class ValidatorUtil {
                 return false;
             } else if (val == undefined || val == null) {
                 return false;
+            } else if (actualType == "number") {
+                // Special handling for number
+                try {
+                    const number = parseInt(val, 10);
+                    return number != null;
+                } catch (e) {
+                    return false;
+                }
             } else if (typeof val != actualType) {
                 return false;
             }
