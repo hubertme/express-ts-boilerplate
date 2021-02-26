@@ -4,7 +4,7 @@ import {Express} from "express";
 import indexRouter from "./src/index/index_router";
 
 export default class AppConfig {
-    static readonly ENVS: 'dev' | 'staging' | 'prod' = 'staging';
+    static readonly ENVS: 'dev' | 'staging' | 'prod' = 'dev';
     static get isProduction(): boolean {
         return this.ENVS === 'prod';
     }
