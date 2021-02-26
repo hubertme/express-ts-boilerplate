@@ -5,6 +5,7 @@ import ServerResponse from "../../responses/server_response";
 import ValidatorUtil from "../../utils/validator_util";
 import {allowOptions} from "../../middlewares/allow_options";
 import {logRequest} from "../../middlewares/request_logging";
+import FormatterUtil from "../../utils/formatter_util";
 
 const indexRouter: Router = Router();
 indexRouter.use(allowOptions);
@@ -12,7 +13,7 @@ indexRouter.use(logRequest);
 
 /* GET home page. */
 indexRouter.get('/', (req, res, next) => {
-  res.render('index', { title: `Express - ${AppConfig.IS_PRODUCTION ? 'Production' : 'Development'}` });
+  res.render('index', { title: `Express - ${FormatterUtil.getOfficialEnvName()}` });
 });
 
 indexRouter.post('/test/add', (req, res, next) => {

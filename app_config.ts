@@ -4,7 +4,10 @@ import {Express} from "express";
 import indexRouter from "./src/index/index_router";
 
 export default class AppConfig {
-    static readonly IS_PRODUCTION: boolean = false;
+    static readonly ENVS: 'dev' | 'staging' | 'prod' = 'staging';
+    static get isProduction(): boolean {
+        return this.ENVS === 'prod';
+    }
     private static app: Express;
 
     /**
@@ -18,7 +21,7 @@ export default class AppConfig {
     }
 
     private static setupEnvironments() {
-        const envPath = path.resolve(__dirname, `./envs/.${this.IS_PRODUCTION ? 'prod' : 'dev'}.env`);
+        const envPath = path.resolve(__dirname, `./envs/.${this.ENVS}.env`);
         dotenv.config({
             path: envPath,
         });

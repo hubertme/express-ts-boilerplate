@@ -3,15 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "tsc && npm run copy:keys && npm run copy:envs",
+    "build": "tsc && npm run copy:all",
     "pretest": "npm run build",
     "test": "mocha 'dist/test/**/*.js' --recursive --timeout 60000 --exit",
     "prestart": "npm test",
     "start": "node dist/bin/runtime.js",
     "start:dev": "npm run build && node dist/bin/runtime.js",
     "start:log": "nohup npm start > output.log",
+    "copy:all": "npm run copy:keys && npm run copy:envs && npm run copy:views",
     "copy:keys": "cp -a keys/. dist/keys",
-    "copy:envs": "cp -a envs/. dist/envs"
+    "copy:envs": "cp -a envs/. dist/envs",
+    "copy:views": "cp -a views/. dist/views"
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",

@@ -1,3 +1,5 @@
+import AppConfig from "../app_config";
+
 export default class FormatterUtil {
     static notNullValuesOnly(input: {[key: string]: any}, allowEmptyString: boolean = true): {[key: string]: any} {
         let result: {[key: string]: any} = {};
@@ -14,5 +16,18 @@ export default class FormatterUtil {
         });
 
         return result;
+    }
+
+    static getOfficialEnvName(): string {
+        switch (AppConfig.ENVS) {
+            case "dev":
+                return "Development";
+            case "staging":
+                return "Staging";
+            case "prod":
+                return "Production";
+            default:
+                return "Unknown";
+        }
     }
 }
