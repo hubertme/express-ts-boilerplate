@@ -8,7 +8,7 @@ describe('NetworkingUtil', () => {
         it('Send basic GET request', async () => {
             try {
                 const resp = await NetworkingUtil.get(URLReqres.GET_SINGLE_USER);
-                console.log('GET request:', resp);
+                // console.log('GET request:', resp);
 
                 assert.isNotNull(resp.headers);
                 assert.isNotNull(resp.data);
@@ -26,7 +26,7 @@ describe('NetworkingUtil', () => {
                     'bar': false,
                 }
                 const resp = await NetworkingUtil.post(URLReqres.CREATE_USER, data);
-                console.log('POST request:', resp);
+                // console.log('POST request:', resp);
 
                 assert.isNotNull(resp.headers);
                 assert.isNotNull(resp.data);

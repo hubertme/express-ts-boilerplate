@@ -3,8 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node --inspect=5858 -r ts-node/register ./bin/runtime.ts",
-    "test": "mocha 'test/**/*.ts' --recursive --reporter mocha-junit-reporter --timeout 60000 --exit"
+    "build": "tsc && npm run copy:keys && npm run copy:envs",
+    "pretest": "npm run build",
+    "test": "mocha 'dist/test/**/*.js' --recursive --timeout 60000 --exit",
+    "prestart": "npm test",
+    "start": "node dist/bin/runtime.js",
+    "start:dev": "npm run build && node dist/bin/runtime.js",
+    "start:log": "nohup npm start > output.log",
+    "copy:keys": "cp -a keys/. dist/keys",
+    "copy:envs": "cp -a envs/. dist/envs"
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",
