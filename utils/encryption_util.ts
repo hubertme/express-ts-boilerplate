@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import {v4 as uuidv4} from "uuid";
 
 export default class EncryptionUtil {
     /**
@@ -123,4 +124,11 @@ export default class EncryptionUtil {
         }
     }
 
+    /**
+     * Create new v4 uuid to be used as random key
+     * @returns 
+     */
+    static createUUID(): string {
+        return uuidv4();
+    }
 }
