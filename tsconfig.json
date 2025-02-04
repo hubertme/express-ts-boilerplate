@@ -2,19 +2,29 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
-    "noImplicitAny": true,
+    "target": "es2022",
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "moduleResolution": "node",
+    "allowJs": true,
+    "types": ["node", "mocha"],
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "allowJs": true,
     "paths": {
       "*": [
         "node_modules/*"
       ]
     },
-    //    "strict": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
     "declaration": false,
     "resolveJsonModule": true
   },

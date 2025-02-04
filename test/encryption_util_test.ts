@@ -1,25 +1,70 @@
-import {assert} from "chai";
-import IndexBiz from "../src/index/index_biz";
+import { assert } from "chai";
 import EncryptionUtil from "../utils/encryption_util";
-import crypto from "crypto";
 
 describe('EncryptionUtil', () => {
-    it('Create an MD5 hash', () => {
-        const string = "test it as it is";
-        const hash = EncryptionUtil.hashMD5(string);
+    const testString = 'this is another test string';
+    const secretKey = '7^dKqU$aDa^PPvAZ6YxJZMFgn=t7^qB3';
+    const iv = '0123456789abcdef0123456789abcdef';
 
-        assert.equal(hash, 'e10308104933a9630d7b6e89fe3db632');
+    describe('AES-256-CBC', () => {
+        it('should encrypt and decrypt data correctly', () => {
+            const encrypted = EncryptionUtil.encryptAES256CBC(testString, secretKey, iv);
+            assert.exists(encrypted.hash);
+            const decrypted = EncryptionUtil.decryptAES256CBC(encrypted.hash, secretKey, iv);
+            assert.equal(decrypted.plain, testString);
+        });
+
+        it('should generate IV when not provided', () => {
+            const encrypted = EncryptionUtil.encryptAES256CBC(testString, secretKey);
+            assert.exists(encrypted.iv);
+            assert.equal(Buffer.from(encrypted.iv, 'hex').length, 16);
+
+            const decrypted = EncryptionUtil.decryptAES256CBC(encrypted.hash, secretKey, encrypted.iv);
+            assert.equal(decrypted.plain, testString);
+        });
+
+        it('should throw error on invalid input', () => {
+            assert.throws(() => EncryptionUtil.encryptAES256CBC('', secretKey), 'Data is required');
+            assert.throws(() => EncryptionUtil.encryptAES256CBC(testString, 'short-key'), 'Secret key must be 32 characters');
+        });
     });
 
-    it('Create an AES-256-CBC encrypt/decrypt', () => {
-        const string = 'this is another test string';
-        const secretKey = '7^dKqU$aDa^PPvAZ6YxJZMFgn=t7^qB3';
-        const iv = 'sK3HG2A^x$EpW6*j';
+    describe('AES-256-GCM', () => {
+        it('should encrypt and decrypt data correctly with auth tag', () => {
+            const encrypted = EncryptionUtil.encryptAES256GCM(testString, secretKey, iv);
+            assert.exists(encrypted.authTag);
 
-        const encryptString = EncryptionUtil.encryptAES256CBC(string, secretKey, iv)['hash'];
-        assert.equal(encryptString.toUpperCase(), 'C30FA233D0714C3E9A391CB293732B18A9FEA8B37964733061F65B41A22D6EF2');
+            const decrypted = EncryptionUtil.decryptAES256GCM(encrypted.hash, secretKey, iv, encrypted.authTag);
+            assert.equal(decrypted.plain, testString);
+        });
+    });
 
-        const decryptString = EncryptionUtil.decryptAES256CBC(encryptString, secretKey, iv)['plain'];
-        assert.equal(decryptString, string);
-    })
+    describe('Password Hashing', () => {
+        it('should hash and verify passwords correctly', async () => {
+            const password = 'test-password-123';
+            const hash = await EncryptionUtil.hashPassword(password);
+            
+            const isValid = await EncryptionUtil.comparePassword(password, hash);
+            assert.isTrue(isValid);
+            
+            const isInvalid = await EncryptionUtil.comparePassword('wrong-password', hash);
+            assert.isFalse(isInvalid);
+        });
+
+        it('should throw error on invalid input', async () => {
+            try {
+                await EncryptionUtil.hashPassword('');
+                assert.fail('Should have thrown an error');
+            } catch (error: any) {
+                assert.equal(error.message, 'Password is required');
+            }
+            
+            try {
+                await EncryptionUtil.comparePassword('', 'hash');
+                assert.fail('Should have thrown an error');
+            } catch (error: any) {
+                assert.equal(error.message, 'Password and hash are required');
+            }
+        });
+    });
 });

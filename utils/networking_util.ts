@@ -24,7 +24,7 @@ export default class NetworkingUtil {
      * @private
      * @return A Response object declared on this file
      */
-    private static async request(url: string, method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS" | "PATCH", params: {[key: string]: any} = null, data: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
+    private static async request(url: string, method: "GET" | "POST" | "PUT" | "DELETE" | "OPTIONS" | "PATCH", params: {[key: string]: any} = {}, data: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
         try {
             const config: AxiosRequestConfig = {
                 method,
@@ -52,7 +52,7 @@ export default class NetworkingUtil {
             return new Response(resHeaders, resData);
         } catch (e) {
             // console.log('Error in NetworkingUtil.request:', e);
-            const resp = e.response;
+            const resp = (e as any).response;
             const resData = resp.data;
             const resHeaders = resp.headers;
 
@@ -60,33 +60,33 @@ export default class NetworkingUtil {
         }
     }
 
-    static async get(url: string, params: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "GET", params, null, headers);
+    static async get(url: string, params: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "GET", params, {}, headers);
         return resp;
     }
 
-    static async post(url: string, data: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "POST", null, data, headers);
+    static async post(url: string, data: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "POST", {}, data, headers);
         return resp;
     }
 
-    static async put(url: string, data: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "PUT", null, data, headers);
+    static async put(url: string, data: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "PUT", {}, data, headers);
         return resp;
     }
 
-    static async delete(url: string, params: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "DELETE", params, null, headers);
+    static async delete(url: string, params: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "DELETE", params, {}, headers);
         return resp;
     }
 
-    static async options(url: string, data: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "OPTIONS", null, data, headers);
+    static async options(url: string, data: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "OPTIONS", {}, data, headers);
         return resp;
     }
 
-    static async patch(url: string, data: {[key: string]: any} = null, headers: {[key: string]: any} = null): Promise<Response> {
-        const resp = await NetworkingUtil.request(url, "PATCH", null, data, headers);
+    static async patch(url: string, data: {[key: string]: any} = {}, headers: {[key: string]: any} = {}): Promise<Response> {
+        const resp = await NetworkingUtil.request(url, "PATCH", {}, data, headers);
         return resp;
     }
 }

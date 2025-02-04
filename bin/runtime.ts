@@ -4,22 +4,20 @@
  * Module dependencies.
  */
 
-let app = require('../app');
-let debug = require('debug')('test-typescript-express:server');
-let http = require('http');
+import app from '../app';
+import http from 'http';
+import { getConfig } from '../utils/config';
+import { logger } from '../utils/logger';
 
-/**
- * Get port from environment and store in Express.
- */
-
-let port = normalizePort(process.env.PORT || '3000');
+const config = getConfig();
+const port = normalizePort(config.port);
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-let server = http.createServer(app);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -33,18 +31,15 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
-// @ts-ignore
-function normalizePort(val) {
-  const port = parseInt(val, 10);
+function normalizePort(val: string | number): number | string | boolean {
+  const portNum = typeof val === 'string' ? parseInt(val, 10) : val;
 
-  if (isNaN(port)) {
-    // named pipe
+  if (isNaN(portNum)) {
     return val;
   }
 
-  if (port >= 0) {
-    // port number
-    return port;
+  if (portNum >= 0) {
+    return portNum;
   }
 
   return false;
@@ -54,8 +49,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 
-// @ts-ignore
-function onError(error) {
+function onError(error: NodeJS.ErrnoException): void {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -83,12 +77,12 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
+function onListening(): void {
   const addr = server.address();
   const bind = typeof addr === 'string'
       ? 'pipe ' + addr
-      : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+      : addr ? 'port ' + addr.port : 'unknown port';
+  logger.info('Listening on ' + bind);
 
   console.log('Server is running on PORT:', port);
 }

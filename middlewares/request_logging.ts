@@ -1,26 +1,15 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
+import { logger } from '../utils/logger';
 
 export function logRequest(req: Request, res: Response, next: NextFunction) {
-    let ipAddress = req.ip;
-    if (!ipAddress || ipAddress === '::1') {
-        ipAddress = 'localhost';
-    }
+    const ipAddress = req.ip === '::1' ? 'localhost' : req.ip;
 
-    // if (blacklistedIPs.indexOf(ipAddress) === -1) {
-    //
-    // } else {
-    //   console.log('Request from blacklisted IP:', ipAddress);
-    //   res.status(403).json({code: ErrorCodes.IP_BLACKLISTED, message: 'This IP has been blocked'});
-    // }
-
-    console.log();
-    console.log("***** Request log begins *****");
-    console.log('IP Address:', ipAddress);
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
-    console.log("Timestamp:", new Date().toISOString());
-    console.log("***** Request log ends *****");
-    console.log();
+    logger.info('Incoming request', {
+        method: req.method,
+        path: req.path,
+        ip: ipAddress,
+        timestamp: new Date().toISOString()
+    });
 
     next();
 }

@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Express TypeScript Boilerplate API
+  version: 1.0.0
+  description: |
+    A secure and well-structured Express.js boilerplate with TypeScript support.
+    
+    ## Features
+    - Full TypeScript support
+    - Comprehensive security measures
+    - Structured logging
+    - Environment-based configuration
+    - Standardized API responses
+
+  contact:
+    name: Hubert
+    url: https://github.com/hubertme/express-ts-boilerplate
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.yourproduction.com
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [error]
+        message:
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+      required:
+        - status
+        - message
+        - statusCode
+
+    Success:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success]
+        message:
+          type: string
+        data:
+          type: object
+      required:
+        - status
+        - message
+        - data
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Unauthorized
+            statusCode: 401
+
+    NotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Resource not found
+            statusCode: 404
+
+    ValidationError:
+      description: Invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Invalid input parameters
+            statusCode: 400
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: Returns the health status of the API
+      security: []
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+              example:
+                status: success
+                message: API is healthy
+                data:
+                  uptime: 123456
+                  version: 1.0.0
+
+  /api/v1/example:
+    get:
+      summary: Example endpoint
+      description: An example endpoint demonstrating the API response format
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+          description: Optional filter parameter
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+              example:
+                status: success
+                message: Data retrieved successfully
+                data:
+                  id: 1
+                  name: Example
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
