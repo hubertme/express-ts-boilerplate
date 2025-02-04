@@ -6,3 +6,7 @@ rootkey.csv
 dist/
 
 output.log
+
+# envs/
+# keys/
+logs/

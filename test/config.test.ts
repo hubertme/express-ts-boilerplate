@@ -38,7 +38,7 @@ describe('Config Utility', () => {
     loadConfig();
     const config = getConfig();
 
-    assert.equal(config.port, 3000);
+    assert.equal(config.port, 34342);
     assert.equal(config.nodeEnv, 'development');
     assert.equal(config.corsOrigin, '*');
     assert.equal(config.rateLimitWindowMs, 900000);

@@ -19,8 +19,8 @@ export default class FormatterUtil {
     }
 
     static getOfficialEnvName(): string {
-        switch (AppConfig.ENVS) {
-            case "dev":
+        switch (process.env.NODE_ENV) {
+            case "development":
                 return "Development";
             case "staging":
                 return "Staging";
