@@ -10,3 +10,6 @@ output.log
 # envs/
 # keys/
 logs/
+
+# ESLint
+.eslintcache
