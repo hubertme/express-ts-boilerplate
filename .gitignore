@@ -1,12 +1,15 @@
 node_modules
 .DS_Store
-*.jade
-views/
 public/stylesheets/
 rootkey.csv
 .idea/
 dist/
 
-envs/
+output.log
 
-keys/
+# envs/
+# keys/
+logs/
+
+# ESLint
+.eslintcache

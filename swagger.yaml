@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: Express TypeScript Boilerplate API
+  version: 1.0.0
+  description: |
+    A secure and well-structured Express.js boilerplate with TypeScript support.
+    
+    ## Features
+    - Full TypeScript support
+    - Comprehensive security measures
+    - Structured logging
+    - Environment-based configuration
+    - Standardized API responses
+
+  contact:
+    name: Hubert
+    url: https://github.com/hubertme/express-ts-boilerplate
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://api.yourproduction.com
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [error]
+        message:
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+      required:
+        - status
+        - message
+        - statusCode
+
+    Success:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success]
+        message:
+          type: string
+        data:
+          type: object
+      required:
+        - status
+        - message
+        - data
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+        uptime:
+          type: number
+          description: Current uptime of the service in seconds.
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - uptime
+        - timestamp
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Unauthorized
+            statusCode: 401
+
+    NotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Resource not found
+            statusCode: 404
+
+    ValidationError:
+      description: Invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            status: error
+            message: Invalid input parameters
+            statusCode: 400
+
+# security: # Temporarily commenting out global security for GET / and GET /health
+#  - bearerAuth: []
+
+paths:
+  /:
+    get:
+      summary: Root/Welcome Page
+      description: Returns the main welcome page (HTML).
+      security: [] # No security for root page
+      responses:
+        '200':
+          description: Successful response, HTML content.
+          content:
+            text/html:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      summary: Health Check
+      description: Returns the health status of the API, including uptime.
+      security: [] # No security for health check
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object # Using ad-hoc schema based on new HealthStatus for better detail
+                properties:
+                  status:
+                    type: string
+                    example: success # Matching existing Success schema pattern
+                  message:
+                    type: string
+                    example: API is healthy
+                  data:
+                    $ref: '#/components/schemas/HealthStatus' # Reference the detailed HealthStatus
+        '500':
+          description: API is unhealthy or error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+# Removed /api/v1/example path
