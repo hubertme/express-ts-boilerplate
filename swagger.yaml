@@ -61,6 +61,23 @@ components:
         - message
         - data
 
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy]
+        uptime:
+          type: number
+          description: Current uptime of the service in seconds.
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - uptime
+        - timestamp
+
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -95,53 +112,55 @@ components:
             message: Invalid input parameters
             statusCode: 400
 
-security:
-  - bearerAuth: []
+# security: # Temporarily commenting out global security for GET / and GET /health
+#  - bearerAuth: []
 
 paths:
+  /:
+    get:
+      summary: Root/Welcome Page
+      description: Returns the main welcome page (HTML).
+      security: [] # No security for root page
+      responses:
+        '200':
+          description: Successful response, HTML content.
+          content:
+            text/html:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /health:
     get:
       summary: Health Check
-      description: Returns the health status of the API
-      security: []
+      description: Returns the health status of the API, including uptime.
+      security: [] # No security for health check
       responses:
         '200':
           description: API is healthy
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Success'
-              example:
-                status: success
-                message: API is healthy
-                data:
-                  uptime: 123456
-                  version: 1.0.0
-
-  /api/v1/example:
-    get:
-      summary: Example endpoint
-      description: An example endpoint demonstrating the API response format
-      parameters:
-        - in: query
-          name: filter
-          schema:
-            type: string
-          description: Optional filter parameter
-      responses:
-        '200':
-          description: Successful response
+                type: object # Using ad-hoc schema based on new HealthStatus for better detail
+                properties:
+                  status:
+                    type: string
+                    example: success # Matching existing Success schema pattern
+                  message:
+                    type: string
+                    example: API is healthy
+                  data:
+                    $ref: '#/components/schemas/HealthStatus' # Reference the detailed HealthStatus
+        '500':
+          description: API is unhealthy or error occurred
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Success'
-              example:
-                status: success
-                message: Data retrieved successfully
-                data:
-                  id: 1
-                  name: Example
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
+                $ref: '#/components/schemas/Error'
+
+# Removed /api/v1/example path

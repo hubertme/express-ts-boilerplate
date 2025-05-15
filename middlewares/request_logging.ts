@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { logger } from '../utils/logger';
+import { logger } from '../src/utils/logger';
 
 export function logRequest(req: Request, res: Response, next: NextFunction) {
     const ipAddress = req.ip === '::1' ? 'localhost' : req.ip;

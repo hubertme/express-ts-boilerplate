@@ -157,4 +157,4 @@ export default class NetworkingUtil {
         const resp = await NetworkingUtil.request(url, "PATCH", {}, data, headers);
         return resp;
     }
-}
+} 

@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import EncryptionUtil from "../utils/encryption_util";
+import EncryptionUtil from "../src/utils/encryption_util";
 
 describe('EncryptionUtil', () => {
     const testString = 'this is another test string';

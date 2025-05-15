@@ -14,10 +14,10 @@ class ResponseModel {
 
 class ServerResponse {
     // --- GENERAL
-    static Success(data: any = null): ResponseModel {
+    static Success(data: any = null, message: string = 'OK'): ResponseModel {
         return new ResponseModel(
             SuccessCodes.OK,
-            'OK',
+            message,
             data
         )
     }

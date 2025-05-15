@@ -23,7 +23,7 @@ export default class ValidatorUtil {
                 // Special handling for number
                 try {
                     const number = parseInt(val, 10);
-                    return number != null && typeof val === 'number';
+                    return !isNaN(number);
                 } catch (e) {
                     return false;
                 }

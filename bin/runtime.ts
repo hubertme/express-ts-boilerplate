@@ -6,10 +6,14 @@
 
 import app from '../app';
 import http from 'http';
-import { getConfig } from '../utils/config';
-import { logger } from '../utils/logger';
+// Import AppConfig class for its static methods and AppConfigType for type annotations
+import AppConfig, { AppConfigType } from '../src/app_config'; 
+import { logger } from '../src/utils/logger';
 
-const config = getConfig();
+// Ensure configuration is loaded before accessing it, if not already done in app.ts
+// AppConfig.loadConfiguration(); // Typically called in app.ts already
+const config: AppConfigType = AppConfig.getConfig();
+
 const port = normalizePort(config.port);
 app.set('port', port);
 
@@ -86,3 +90,16 @@ function onListening(): void {
 
   console.log('Server is running on PORT:', port);
 }
+
+// Global error handlers
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', { message: error.message, stack: error.stack });
+  // It's often recommended to exit the process gracefully after an uncaught exception
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', { promise, reason });
+  // Optionally, exit or take other actions
+  process.exit(1);
+});
